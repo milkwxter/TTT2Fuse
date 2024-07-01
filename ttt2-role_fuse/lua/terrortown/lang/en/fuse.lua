@@ -7,3 +7,6 @@ L["body_found_" .. FUSE.abbr] = "They were a Fuse."
 L["search_role_" .. FUSE.abbr] = "This person was a Fuse!"
 L["target_" .. FUSE.name] = "Fuse"
 L["ttt2_desc_" .. FUSE.name] = [[The Fuse must kill other players quickly, or else he explodes!]]
+
+--Convar Label
+L["label_fuse_explode_timer"] = "Time until explosion and refreshed when getting a kill: "
