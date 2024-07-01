@@ -49,11 +49,13 @@ if CLIENT then
 	end)
 end
 
+CreateConVar("ttt2_fuse_explode_timer", 60, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+
 if SERVER then
   -- start timer on respawn and rolechange
 	function ROLE:GiveRoleLoadout(ply, isRoleChange)
-		STATUS:AddTimedStatus(ply, "ttt2_fuse_timer_status", 60, true)
-		timer.Create("ttt2_fuse_timer_explode", 60, 1, function()
+		STATUS:AddTimedStatus(ply, "ttt2_fuse_timer_status", GetConVar("ttt2_fuse_explode_timer"):GetInt(), true)
+		timer.Create("ttt2_fuse_timer_explode", GetConVar("ttt2_fuse_explode_timer"):GetInt(), 1, function()
 			for k, v in pairs(roles.GetTeamMembers(TEAM_TRAITOR)) do
 				-- make sure he is alive
 				if v:GetRoleString() == "fuse" and v:Alive() then
@@ -88,10 +90,26 @@ if SERVER then
     if attacker:GetRoleString() == "fuse" then
       -- remove timed status
 	    STATUS:RemoveStatus(attacker, "ttt2_fuse_timer_status")
-      -- readd the timed status
-      STATUS:AddTimedStatus(attacker, "ttt2_fuse_timer_status", 60, true)
+      -- read the timed status
+      STATUS:AddTimedStatus(attacker, "ttt2_fuse_timer_status", GetConVar("ttt2_fuse_explode_timer"):GetInt(), true)
       -- adjust the explosion timer
-      timer.Adjust("ttt2_fuse_timer_explode", 60, nil, nil)
+      timer.Adjust("ttt2_fuse_timer_explode", GetConVar("ttt2_fuse_explode_timer"):GetInt(), nil, nil)
     end
   end)
+end
+
+--Convar Goes Here
+if CLIENT then
+  function ROLE:AddToSettingsMenu(parent)
+    local form = vgui.CreateTTT2Form(parent, "header_roles_additional")
+	
+	form:MakeSlider({
+      serverConvar = "ttt2_fuse_explode_timer",
+      label = "label_fuse_explode_timer",
+      min = 5,
+      max = 120,
+      decimal = 0
+	})
+	
+  end
 end
