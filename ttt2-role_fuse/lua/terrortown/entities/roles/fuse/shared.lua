@@ -43,8 +43,8 @@ if CLIENT then
 		STATUS:RegisterStatus("ttt2_fuse_timer_status", {
 			hud = Material("vgui/ttt/icons/exploder.png"),
 			type = "bad",
-			name = "Fuse Detonation Timer",
-			sidebarDescription = "Kill someone to reset the timer. If it reaches 0 you will explode."
+			name = "label_fuse_explosion_title",
+			sidebarDescription = "label_fuse_explosion_desc"
 		})
 	end)
 end
@@ -72,9 +72,15 @@ if SERVER then
 		end)
 	end
 
-	-- Remove timrt on death and rolechange
+	-- Remove timer on death and rolechange and round end
 	function ROLE:RemoveRoleLoadout(ply, isRoleChange)
+    timer.Remove("ttt2_fuse_timer_explode")
+    STATUS:RemoveStatus(ply, "ttt2_fuse_timer_status")
 	end
+  hook.Add("TTTRoundEnd", "FuseRoundEnd", function()
+    timer.Remove("ttt2_fuse_timer_explode")
+    STATUS:RemoveStatus(ply, "ttt2_fuse_timer_status")
+  end)
 
   -- Check for if the Fuse kills a player
   hook.Add("TTT2PostPlayerDeath", "FuseCheckForKill", function(victim, inflictor, attacker)
