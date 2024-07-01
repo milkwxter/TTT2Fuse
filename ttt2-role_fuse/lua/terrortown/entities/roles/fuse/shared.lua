@@ -54,8 +54,22 @@ if SERVER then
 	function ROLE:GiveRoleLoadout(ply, isRoleChange)
 		STATUS:AddTimedStatus(ply, "ttt2_fuse_timer_status", 60, true)
 		timer.Create("ttt2_fuse_timer_explode", 60, 1, function()
-      print("BOOM!!!!")
-    end)
+			for k, v in pairs(roles.GetTeamMembers(TEAM_TRAITOR)) do
+				-- make sure he is alive
+				if v:GetRoleString() == "fuse" and v:Alive() then
+					local pos = v:GetNetworkOrigin()
+					local effect = EffectData()
+					effect:SetStart(pos)
+					effect:SetOrigin(pos)
+					effect:SetScale(90)
+					effect:SetRadius(300)
+					effect:SetMagnitude(200)
+					util.BlastDamage(v, v, pos, 300, 200) 
+					util.Effect("Explosion", effect, true, true)  
+					return
+				end
+			end
+		end)
 	end
 
 	-- Remove timrt on death and rolechange
@@ -67,7 +81,7 @@ if SERVER then
     -- make sure the attacker is the fuse
     if attacker:GetRoleString() == "fuse" then
       -- remove timed status
-      STATUS:RemoveStatus(attacker, "ttt2_fuse_timer_status")
+	  STATUS:RemoveStatus(attacker, "ttt2_fuse_timer_status")
       -- readd the timed status
       STATUS:AddTimedStatus(attacker, "ttt2_fuse_timer_status", 60, true)
       -- adjust the explosion timer
