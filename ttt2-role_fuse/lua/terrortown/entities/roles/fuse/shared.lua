@@ -43,8 +43,8 @@ if CLIENT then
 		STATUS:RegisterStatus("ttt2_fuse_timer_status", {
 			hud = Material("vgui/ttt/icons/exploder.png"),
 			type = "bad",
-			name = "You gonna explode",
-			sidebarDescription = "Im serious"
+			name = "Fuse Detonation Timer",
+			sidebarDescription = "Kill someone to reset the timer. If it reaches 0 you will explode."
 		})
 	end)
 end
