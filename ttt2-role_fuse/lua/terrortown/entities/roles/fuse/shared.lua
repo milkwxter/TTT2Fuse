@@ -37,15 +37,26 @@ function ROLE:Initialize()
   roles.SetBaseRole(self, ROLE_TRAITOR)
 end
 
+--Add Cooldown Status
+if CLIENT then
+    hook.Add("Initialize", "ttt2_fuse_init", function()
+		STATUS:RegisterStatus("ttt2_fuse_timer_status", {
+			hud = Material("vgui/ttt/icons/exploder.png"),
+			type = "bad",
+			name = "You gonna explode",
+			sidebarDescription = "Im serious"
+		})
+	end)
+end
 
 if SERVER then
-   -- Give Loadout on respawn and rolechange
+  -- start timer on respawn and rolechange
 	function ROLE:GiveRoleLoadout(ply, isRoleChange)
-		-- start timer
+		STATUS:AddTimedStatus(ply, "ttt2_fuse_timer_status", 60, true)
+		timer.Create("ttt2_fuse_timer_explode", 60, 1, function() end)
 	end
 
-	-- Remove Loadout on death and rolechange
+	-- Remove timrt on death and rolechange
 	function ROLE:RemoveRoleLoadout(ply, isRoleChange)
-		-- remobe timer
 	end
 end
