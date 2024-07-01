@@ -81,7 +81,7 @@ if SERVER then
     -- make sure the attacker is the fuse
     if attacker:GetRoleString() == "fuse" then
       -- remove timed status
-	  STATUS:RemoveStatus(attacker, "ttt2_fuse_timer_status")
+	    STATUS:RemoveStatus(attacker, "ttt2_fuse_timer_status")
       -- readd the timed status
       STATUS:AddTimedStatus(attacker, "ttt2_fuse_timer_status", 60, true)
       -- adjust the explosion timer
