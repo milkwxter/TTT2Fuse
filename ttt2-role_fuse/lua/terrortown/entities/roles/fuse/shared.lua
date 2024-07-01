@@ -53,10 +53,25 @@ if SERVER then
   -- start timer on respawn and rolechange
 	function ROLE:GiveRoleLoadout(ply, isRoleChange)
 		STATUS:AddTimedStatus(ply, "ttt2_fuse_timer_status", 60, true)
-		timer.Create("ttt2_fuse_timer_explode", 60, 1, function() end)
+		timer.Create("ttt2_fuse_timer_explode", 60, 1, function()
+      print("BOOM!!!!")
+    end)
 	end
 
 	-- Remove timrt on death and rolechange
 	function ROLE:RemoveRoleLoadout(ply, isRoleChange)
 	end
+
+  -- Check for if the Fuse kills a player
+  hook.Add("TTT2PostPlayerDeath", "FuseCheckForKill", function(victim, inflictor, attacker)
+    -- make sure the attacker is the fuse
+    if attacker:GetRoleString() == "fuse" then
+      -- remove timed status
+      STATUS:RemoveStatus(attacker, "ttt2_fuse_timer_status")
+      -- readd the timed status
+      STATUS:AddTimedStatus(attacker, "ttt2_fuse_timer_status", 60, true)
+      -- adjust the explosion timer
+      timer.Adjust("ttt2_fuse_timer_explode", 60, nil, nil)
+    end
+  end)
 end
