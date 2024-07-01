@@ -59,20 +59,27 @@ if SERVER then
 			for k, v in pairs(roles.GetTeamMembers(TEAM_TRAITOR)) do
 				-- make sure he is alive
 				if v:GetRoleString() == "fuse" and v:Alive() then
-					local pos = v:GetNetworkOrigin()
-					local effect = EffectData()
-					effect:SetStart(pos)
-					effect:SetOrigin(pos)
-					effect:SetScale(90)
-					effect:SetRadius(300)
-					effect:SetMagnitude(200)
-					util.BlastDamage(v, v, pos, 300, 200) 
-					util.Effect("Explosion", effect, true, true)  
+          EmitSound("litFuse.wav", v:GetNetworkOrigin())
+          timer.Create("ttt2_fuse_timer_exploding", 3, 1, function()
+            fuseExplode(v)
+          end)
 					return
 				end
 			end
 		end)
 	end
+
+  function fuseExplode(ply)
+    local pos = ply:GetNetworkOrigin()
+		local effect = EffectData()
+		effect:SetStart(pos)
+		effect:SetOrigin(pos)
+		effect:SetScale(90)
+		effect:SetRadius(300)
+		effect:SetMagnitude(200)
+		util.BlastDamage(ply, ply, pos, 300, 200) 
+		util.Effect("Explosion", effect, true, true) 
+  end
 
 	-- Remove timer on death and rolechange and round end
 	function ROLE:RemoveRoleLoadout(ply, isRoleChange)
