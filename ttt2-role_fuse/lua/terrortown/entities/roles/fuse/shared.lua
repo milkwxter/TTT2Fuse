@@ -94,14 +94,15 @@ if SERVER then
   -- Check for if the Fuse kills a player
   hook.Add("TTT2PostPlayerDeath", "FuseCheckForKill", function(victim, inflictor, attacker)
     -- make sure the attacker is the fuse
-    if attacker:GetRoleString() == "fuse" then
+	-- also check if the victim didn't die from environmental damage
+	if not attacker == nil and attacker:GetRoleString() == "fuse" then
       -- remove timed status
 	    STATUS:RemoveStatus(attacker, "ttt2_fuse_timer_status")
       -- read the timed status
       STATUS:AddTimedStatus(attacker, "ttt2_fuse_timer_status", GetConVar("ttt2_fuse_explode_timer"):GetInt(), true)
       -- adjust the explosion timer
       timer.Adjust("ttt2_fuse_timer_explode", GetConVar("ttt2_fuse_explode_timer"):GetInt(), nil, nil)
-    end
+	end
   end)
 end
 
