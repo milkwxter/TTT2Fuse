@@ -81,21 +81,25 @@ if SERVER then
 		util.Effect("Explosion", effect, true, true) 
   end
 
-	-- Remove timer on death and rolechange and round end
-	function ROLE:RemoveRoleLoadout(ply, isRoleChange)
+  -- Remove timer on death and rolechange
+  function ROLE:RemoveRoleLoadout(ply, isRoleChange)
     timer.Remove("ttt2_fuse_timer_explode")
     STATUS:RemoveStatus(ply, "ttt2_fuse_timer_status")
-	end
+  end
+	
+  -- Remove timer on round end
   hook.Add("TTTRoundEnd", "FuseRoundEnd", function()
     timer.Remove("ttt2_fuse_timer_explode")
-    STATUS:RemoveStatus(ply, "ttt2_fuse_timer_status")
   end)
 
-  -- Check for if the Fuse kills a player
+  -- hook for if the fuse kills a player
   hook.Add("TTT2PostPlayerDeath", "FuseCheckForKill", function(victim, inflictor, attacker)
-    -- check if the victim didn't die from environmental damage
-    if inflictor:GetClass() == "worldspawn" then return end
-	  if not attacker:IsValid() then return end
+	-- check if the inflictor or attacker is valid
+    if not inflictor:IsValid() or not attacker:IsValid() then return end
+
+    -- check if the attacker is a player
+    if not attacker:IsPlayer() then return end
+	
     -- make sure the attacker is the fuse
     if attacker:GetSubRole() == ROLE_FUSE then
         -- remove timed status
